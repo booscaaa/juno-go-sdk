@@ -2,7 +2,6 @@ package model
 
 import (
 	"encoding/json"
-	"fmt"
 	"io"
 )
 
@@ -37,8 +36,6 @@ func FromJsonJunoPlan(body io.ReadCloser) (*Plan, error) {
 func FromJsonJunoPlans(body io.ReadCloser) (*[]Plan, error) {
 	embedded := _Embedded{}
 	err := json.NewDecoder(body).Decode(&embedded)
-
-	fmt.Println(err)
 
 	if err != nil {
 		return nil, err

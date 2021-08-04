@@ -4,12 +4,11 @@ import (
 	"bytes"
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
-	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strings"
 
+	"github.com/booscaaa/juno-go-sdk/juno/errors"
 	"github.com/booscaaa/juno-go-sdk/juno/model"
 )
 
@@ -24,19 +23,25 @@ func Instance(access JunoAccess) JunoAccessRepository {
 }
 
 func (juno junoAccess) GetAuthToken() (*model.JunoAccessAuth, error) {
+	urlString := juno.access.api + "/authorization-server/oauth/token"
+
 	base64Token := base64.StdEncoding.EncodeToString([]byte(juno.access.clientID + ":" + juno.access.clientSecret))
 
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
-
-	urlString := juno.access.api + "/authorization-server/oauth/token"
 
 	client := &http.Client{}
 	r, _ := http.NewRequest(http.MethodPost, urlString, strings.NewReader(data.Encode())) // URL-encoded payload
 	r.Header.Add("Authorization", "Basic "+base64Token)
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, _ := client.Do(r)
+	resp, err := client.Do(r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	defer resp.Body.Close()
 
 	if resp.StatusCode == 200 {
 		junoAccessAuth, err := model.FromJsonJunoAccessAuth(resp.Body)
@@ -46,9 +51,11 @@ func (juno junoAccess) GetAuthToken() (*model.JunoAccessAuth, error) {
 		}
 
 		return junoAccessAuth, nil
-	}
+	} else {
+		defaultError := errors.ParseDefaultError(resp.Body)
 
-	return nil, fmt.Errorf("Request failed")
+		return nil, defaultError
+	}
 }
 
 func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditCardHash string) (*model.CreditCard, error) {
@@ -67,14 +74,11 @@ func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditC
 	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
 	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
 
-	resp, _ := client.Do(r)
+	resp, err := client.Do(r)
 
-	bodyBytes, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		fmt.Println(err)
+		return nil, err
 	}
-	bodyString := string(bodyBytes)
-	fmt.Println(bodyString)
 
 	if resp.StatusCode == 200 {
 		junoCreditCard, err := model.FromJsonJunoCreditCard(resp.Body)
@@ -84,9 +88,11 @@ func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditC
 		}
 
 		return junoCreditCard, nil
-	}
+	} else {
+		defaultError := errors.ParseDefaultError(resp.Body)
 
-	return nil, fmt.Errorf("Request failed")
+		return nil, defaultError
+	}
 }
 
 func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.Plan, error) {
@@ -99,7 +105,11 @@ func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.P
 	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
 	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
 
-	resp, _ := client.Do(r)
+	resp, err := client.Do(r)
+
+	if err != nil {
+		return nil, err
+	}
 
 	if resp.StatusCode == 200 {
 		plans, err := model.FromJsonJunoPlans(resp.Body)
@@ -109,7 +119,9 @@ func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.P
 		}
 
 		return plans, nil
-	}
+	} else {
+		defaultError := errors.ParseDefaultError(resp.Body)
 
-	return nil, fmt.Errorf("Request failed")
+		return nil, defaultError
+	}
 }

@@ -28,8 +28,17 @@ func main() {
 
 	junoSdk := juno.Instance(junoAccess)
 
-	accessToken, _ := junoSdk.GetAuthToken()
-	// creditCard, err := junoSdk.TokenizeCard(*accessToken, "a750d6be-8940-4854-97ab-5e54a4e00716")
+	accessToken, err := junoSdk.GetAuthToken()
+
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	_, err = junoSdk.TokenizeCard(*accessToken, "a750d6be-8940-4854-97ab-5e54a4e00716")
+
+	if err != nil {
+		fmt.Println(err)
+	}
 
 	plans, err := junoSdk.GetPlans(*accessToken)
 
