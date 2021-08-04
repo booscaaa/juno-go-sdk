@@ -1,0 +1,7 @@
+{
+  "juno": {
+    "client_id": "cliend id",
+    "client_secret": "client secret",
+    "resource_token": "resource token"
+  }
+}
