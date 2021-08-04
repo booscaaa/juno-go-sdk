@@ -12,6 +12,10 @@ import (
 	"github.com/booscaaa/juno-go-sdk/juno/model"
 )
 
+func init() {
+	Client = &http.Client{}
+}
+
 type junoAccess struct {
 	access JunoAccess
 }
@@ -30,12 +34,11 @@ func (juno junoAccess) GetAuthToken() (*model.JunoAccessAuth, error) {
 	data := url.Values{}
 	data.Set("grant_type", "client_credentials")
 
-	client := &http.Client{}
 	r, _ := http.NewRequest(http.MethodPost, urlString, strings.NewReader(data.Encode())) // URL-encoded payload
 	r.Header.Add("Authorization", "Basic "+base64Token)
 	r.Header.Add("Content-Type", "application/x-www-form-urlencoded")
 
-	resp, err := client.Do(r)
+	resp, err := Client.Do(r)
 
 	if err != nil {
 		return nil, err
@@ -67,14 +70,13 @@ func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditC
 
 	jsonStr, _ := json.Marshal(payload)
 
-	client := &http.Client{}
 	r, _ := http.NewRequest(http.MethodPost, urlString, bytes.NewBuffer(jsonStr))
 	r.Header.Add("Authorization", "Bearer "+junoAccessAuth.AccessToken)
 	r.Header.Add("X-Api-Version", "2")
 	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
 	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
 
-	resp, err := client.Do(r)
+	resp, err := Client.Do(r)
 
 	if err != nil {
 		return nil, err
@@ -98,14 +100,13 @@ func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditC
 func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.Plan, error) {
 	urlString := juno.access.api + juno.access.baseUrl + "/plans"
 
-	client := &http.Client{}
 	r, _ := http.NewRequest(http.MethodGet, urlString, nil)
 	r.Header.Add("Authorization", "Bearer "+junoAccessAuth.AccessToken)
 	r.Header.Add("X-Api-Version", "2")
 	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
 	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
 
-	resp, err := client.Do(r)
+	resp, err := Client.Do(r)
 
 	if err != nil {
 		return nil, err

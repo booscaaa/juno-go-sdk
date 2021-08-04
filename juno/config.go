@@ -1,6 +1,10 @@
 package juno
 
-import "github.com/booscaaa/juno-go-sdk/juno/model"
+import (
+	"net/http"
+
+	"github.com/booscaaa/juno-go-sdk/juno/model"
+)
 
 const (
 	PRODUCTION          = "https://api.juno.com.br"
@@ -8,6 +12,14 @@ const (
 	BASE_URL_PRODUCTION = ""
 	BASE_URL_SANDBOX    = "/api-integration"
 )
+
+var (
+	Client HTTPClient
+)
+
+type HTTPClient interface {
+	Do(req *http.Request) (*http.Response, error)
+}
 
 type JunoAccess struct {
 	api           string
