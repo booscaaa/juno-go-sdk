@@ -66,48 +66,48 @@ $ go get juno-go-sdk
 package main
 
 import (
-	"fmt"
+"fmt"
 
-	"juno-go-sdk/juno"
-	"github.com/spf13/viper"
+"juno-go-sdk/juno"
+"github.com/spf13/viper"
 )
 
 func init() {
-	viper.SetConfigFile(`config.json`)
-	err := viper.ReadInConfig()
-	if err != nil {
-		panic(err)
-	}
+viper.SetConfigFile(`config.json`)
+err := viper.ReadInConfig()
+if err != nil {
+    panic(err)
+}
 }
 
 func main() {
     // Get configuration variavables
-	clientID := viper.GetString("juno.client_id")
-	clientSecret := viper.GetString("juno.client_secret")
-	resourceToken := viper.GetString("juno.resource_token")
+clientID := viper.GetString("juno.client_id")
+clientSecret := viper.GetString("juno.client_secret")
+resourceToken := viper.GetString("juno.resource_token")
 
     // Configure Sandbox access into Juno api
-	junoAccess := juno.JunoConfig().
-		ClientID(clientID).
-		ClientSecret(clientSecret).
-		ResourceToken(resourceToken).
-		Sandbox()
+junoAccess := juno.JunoConfig().
+    ClientID(clientID).
+    ClientSecret(clientSecret).
+    ResourceToken(resourceToken).
+    Sandbox()
 
-	junoSdk := juno.Instance(junoAccess)
+junoSdk := juno.Instance(junoAccess)
 
     // Get authentication token from juno api
-    accessToken, err := junoSdk.GetAuthToken()
+accessToken, err := junoSdk.GetAuthToken()
 
-	if err != nil {
-		fmt.Println(err)
-	}
+if err != nil {
+    fmt.Println(err)
+}
 
     //Get list plans from juno api
-    plans, err := junoSdk.GetPlans(*accessToken)
+plans, err := junoSdk.GetPlans(*accessToken)
 
-	if err != nil {
-		fmt.Println(err)
-	}
+if err != nil {
+    fmt.Println(err)
+}
 
     //see more examples into examples folder
 }
