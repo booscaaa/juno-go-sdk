@@ -52,4 +52,5 @@ func (junoAccess JunoAccess) Sandbox() JunoAccess {
 type JunoAccessRepository interface {
 	GetAuthToken() (*model.JunoAccessAuth, error)
 	TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditCardHash string) (*model.CreditCard, error)
+	GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.Plan, error)
 }

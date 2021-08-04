@@ -88,3 +88,28 @@ func (juno junoAccess) TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditC
 
 	return nil, fmt.Errorf("Request failed")
 }
+
+func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.Plan, error) {
+	urlString := juno.access.api + juno.access.baseUrl + "/plans"
+
+	client := &http.Client{}
+	r, _ := http.NewRequest(http.MethodGet, urlString, nil)
+	r.Header.Add("Authorization", "Bearer "+junoAccessAuth.AccessToken)
+	r.Header.Add("X-Api-Version", "2")
+	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
+	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
+
+	resp, _ := client.Do(r)
+
+	if resp.StatusCode == 200 {
+		plans, err := model.FromJsonJunoPlans(resp.Body)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return plans, nil
+	}
+
+	return nil, fmt.Errorf("Request failed")
+}
