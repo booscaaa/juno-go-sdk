@@ -4,7 +4,7 @@
   <p align="center">
     <a href="https://github.com/booscaaa/juno-go-sdk/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/juno-go-sdk.svg?style=for-the-badge"></a>
     <a href="/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-red.svg?style=for-the-badge"></a>
-    <a href="https://github.com/booscaaa/juno-go-sdk/actions?query=workflow%3ADeploy"><img alt="Build status" src="https://img.shields.io/github/workflow/status/booscaaa/juno-go-sdk/Deploy?style=for-the-badge"></a>
+    <a href="https://github.com/booscaaa/juno-go-sdk/actions/workflows/test.yaml?query=workflow%3ATest"><img alt="Build status" src="https://img.shields.io/github/workflow/status/booscaaa/juno-go-sdk/Deploy?style=for-the-badge"></a>
     <a href="https://codecov.io/gh/booscaaa/juno-go-sdk"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/booscaaa/juno-go-sdk/master.svg?style=for-the-badge"></a>
   </p>
 </p>
