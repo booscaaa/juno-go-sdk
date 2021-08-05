@@ -409,3 +409,309 @@ func TestSholdBeReturnErrorOnRequestNotFormatedOnGetPlan(t *testing.T) {
 
 	assert.So(plan, should.BeNil).Fatal()
 }
+
+func TestSholdBeReturnJunoCreatePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200GetPlan()
+
+	plan, err := junoSdk.CreatePlan(*authToken, "name", 100.00)
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	assert.So(plan, should.NotBeEmpty).Fatal()
+	assert.So(plan, should.NotBeNil).Fatal()
+	assert.So(plan.ID, should.NotBeEmpty).Fatal()
+	assert.So(plan.Amount, should.NotBeEmpty).Fatal()
+	assert.So(plan.CreatedOn, should.NotBeEmpty).Fatal()
+	assert.So(plan.Frequency, should.NotBeEmpty).Fatal()
+	assert.So(plan.Name, should.NotBeEmpty).Fatal()
+}
+
+func TestSholdBeReturnJunoDefaultErrorOnCreatePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.ResponseDefaultError()
+
+	plan, err := junoSdk.CreatePlan(*authToken, "name", 100.00)
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnAnyKeyEmptyOnCreatePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200WithoutKey()
+
+	plan, err := junoSdk.CreatePlan(*authToken, "name", 100.00)
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnRequestNotFormatedOnCreatePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.WrongRequestFormat()
+
+	plan, err := junoSdk.CreatePlan(*authToken, "name", 100.00)
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnJunoDisablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200GetPlan()
+
+	plan, err := junoSdk.DisablePlan(*authToken, "id")
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	assert.So(plan, should.NotBeEmpty).Fatal()
+	assert.So(plan, should.NotBeNil).Fatal()
+	assert.So(plan.ID, should.NotBeEmpty).Fatal()
+	assert.So(plan.Amount, should.NotBeEmpty).Fatal()
+	assert.So(plan.CreatedOn, should.NotBeEmpty).Fatal()
+	assert.So(plan.Frequency, should.NotBeEmpty).Fatal()
+	assert.So(plan.Name, should.NotBeEmpty).Fatal()
+}
+
+func TestSholdBeReturnJunoDefaultErrorOnDisablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.ResponseDefaultError()
+
+	plan, err := junoSdk.DisablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnAnyKeyEmptyOnDisablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200WithoutKey()
+
+	plan, err := junoSdk.DisablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnRequestNotFormatedOnDisablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.WrongRequestFormat()
+
+	plan, err := junoSdk.DisablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnJunoEnablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200GetPlan()
+
+	plan, err := junoSdk.EnablePlan(*authToken, "id")
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	assert.So(plan, should.NotBeEmpty).Fatal()
+	assert.So(plan, should.NotBeNil).Fatal()
+	assert.So(plan.ID, should.NotBeEmpty).Fatal()
+	assert.So(plan.Amount, should.NotBeEmpty).Fatal()
+	assert.So(plan.CreatedOn, should.NotBeEmpty).Fatal()
+	assert.So(plan.Frequency, should.NotBeEmpty).Fatal()
+	assert.So(plan.Name, should.NotBeEmpty).Fatal()
+}
+
+func TestSholdBeReturnJunoDefaultErrorOnEnablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.ResponseDefaultError()
+
+	plan, err := junoSdk.EnablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnAnyKeyEmptyOnEnablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200WithoutKey()
+
+	plan, err := junoSdk.EnablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnRequestNotFormatedOnEnablePlan(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.WrongRequestFormat()
+
+	plan, err := junoSdk.EnablePlan(*authToken, "id")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(plan, should.BeNil).Fatal()
+}
