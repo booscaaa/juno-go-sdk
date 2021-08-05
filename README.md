@@ -42,7 +42,7 @@ To run this project in the development mode, you'll need to have a basic environ
 ### Installing
 
 ```bash
-$ go get juno-go-sdk
+$ go get github.com/booscaaa/juno-go-sdk
 ```
 
 <br>
@@ -68,7 +68,7 @@ package main
 import (
     "fmt"
 
-    "juno-go-sdk/juno"
+    "github.com/booscaaa/juno-go-sdk/juno"
     "github.com/spf13/viper"
 )
 
