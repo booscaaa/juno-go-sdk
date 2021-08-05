@@ -26,6 +26,7 @@ Connect with me at [LinkedIn](https://www.linkedin.com/in/booscaaa/).
 - Get authentication token
 - Create tokenized card
 - Get plans for signatures
+- Get plan by ID
 
 <br>
 
