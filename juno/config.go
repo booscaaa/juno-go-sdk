@@ -66,4 +66,7 @@ type JunoAccessRepository interface {
 	TokenizeCard(junoAccessAuth model.JunoAccessAuth, creditCardHash string) (*model.CreditCard, error)
 	GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.Plan, error)
 	GetPlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error)
+	CreatePlan(junoAccessAuth model.JunoAccessAuth, name string, amount float64) (*model.Plan, error)
+	DisablePlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error)
+	EnablePlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error)
 }

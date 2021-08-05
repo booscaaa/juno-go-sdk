@@ -62,4 +62,31 @@ func main() {
 		}
 		fmt.Println(newPlan)
 	}
+
+	// create new plan
+	// createdPlan, err := junoSdk.CreatePlan(*accessToken, "test", 150.05)
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// fmt.Println(createdPlan)
+
+	// disable plan by id
+	// disabledPlan, err := junoSdk.DisablePlan(*accessToken, "pln_36C2BA50D47E5868")
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// fmt.Println(disabledPlan)
+
+	// enable plan by id
+	// enabledPlan, err := junoSdk.EnablePlan(*accessToken, "pln_36C2BA50D47E5868")
+
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
+
+	// fmt.Println(enabledPlan)
 }
