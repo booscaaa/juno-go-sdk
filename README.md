@@ -2,9 +2,10 @@
   <h1 align="center">Juno API - Golang SDK</h1>
   <p align="center">Juno API (Open Banking) (2.0.0) </p>
   <p align="center">
+    <a href="https://pkg.go.dev/github.com/booscaaa/juno-go-sdk"><img alt="Reference" src="https://img.shields.io/badge/go-reference-purple?style=for-the-badge"></a>
     <a href="https://github.com/booscaaa/juno-go-sdk/releases/latest"><img alt="Release" src="https://img.shields.io/github/v/release/booscaaa/juno-go-sdk.svg?style=for-the-badge"></a>
     <a href="/LICENSE"><img alt="Software License" src="https://img.shields.io/badge/license-MIT-red.svg?style=for-the-badge"></a>
-    <a href="https://github.com/booscaaa/juno-go-sdk/actions/workflows/test.yaml"><img alt="Build status" src="https://img.shields.io/github/workflow/status/booscaaa/juno-go-sdk/Test?style=for-the-badge"></a>
+    <a href="https://github.com/booscaaa/juno-go-sdk/actions/workflows/test.yaml"><img alt="Test status" src="https://img.shields.io/github/workflow/status/booscaaa/juno-go-sdk/Test?label=TESTS&style=for-the-badge"></a>
     <a href="https://codecov.io/gh/booscaaa/juno-go-sdk"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/booscaaa/juno-go-sdk/master.svg?style=for-the-badge"></a>
   </p>
 </p>
