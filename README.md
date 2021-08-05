@@ -145,4 +145,4 @@ Thank you!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](juno-go-sdk/blob/master/LICENSE) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/booscaaa/juno-go-sdk/blob/master/LICENSE) file for details
