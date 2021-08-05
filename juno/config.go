@@ -69,4 +69,19 @@ type JunoAccessRepository interface {
 	CreatePlan(junoAccessAuth model.JunoAccessAuth, name string, amount float64) (*model.Plan, error)
 	DisablePlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error)
 	EnablePlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error)
+	CreateSignature(
+		junoAccessAuth model.JunoAccessAuth,
+		dueDay int,
+		planID string,
+		chargeDescription string,
+		creditCardHash string,
+		billingName string,
+		billingCpfCnpj string,
+		billingEmail string,
+		billingAddressStreet string,
+		billingAddressNumber string,
+		billingAddressCity string,
+		billingAddressState string,
+		billingAddressCep string,
+	) (*model.Plan, error)
 }

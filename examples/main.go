@@ -38,30 +38,30 @@ func main() {
 	}
 
 	// Tokenize credit card by hash. How to crypt hash can be found hear: https://dev.juno.com.br/api/v2#tag/Obtendo-o-hash
-	creditCard, err := junoSdk.TokenizeCard(*accessToken, "e6bfca8c-ef97-4707-bc2a-e95ac26898be")
+	// creditCard, err := junoSdk.TokenizeCard(*accessToken, "e6bfca8c-ef97-4707-bc2a-e95ac26898be")
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	fmt.Println(creditCard)
+	// fmt.Println(creditCard)
 
 	//Get list plans from juno api
-	plans, err := junoSdk.GetPlans(*accessToken)
+	// plans, err := junoSdk.GetPlans(*accessToken)
 
-	if err != nil {
-		fmt.Println(err)
-	}
+	// if err != nil {
+	// 	fmt.Println(err)
+	// }
 
-	for _, plan := range *plans {
-		//Get plan by id from juno api
-		newPlan, err := junoSdk.GetPlan(*accessToken, plan.ID)
+	// for _, plan := range *plans {
+	// 	//Get plan by id from juno api
+	// 	newPlan, err := junoSdk.GetPlan(*accessToken, plan.ID)
 
-		if err != nil {
-			fmt.Println(err)
-		}
-		fmt.Println(newPlan)
-	}
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	}
+	// 	fmt.Println(newPlan)
+	// }
 
 	// create new plan
 	// createdPlan, err := junoSdk.CreatePlan(*accessToken, "test", 150.05)
@@ -89,4 +89,25 @@ func main() {
 	// }
 
 	// fmt.Println(enabledPlan)
+
+	// create signature
+	_, err = junoSdk.CreateSignature(
+		*accessToken,
+		20,
+		"pln_36C2BA50D47E5868",
+		"Billing description",
+		"cardHash",
+		"Vinicius Boscardin",
+		"25216051317",
+		"teste@email.com",
+		"Avenida Teste",
+		"N/A",
+		"Marau",
+		"RS",
+		"99150000",
+	)
+
+	if err != nil {
+		fmt.Println(err)
+	}
 }
