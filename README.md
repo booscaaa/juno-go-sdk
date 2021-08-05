@@ -28,6 +28,9 @@ Connect with me at [LinkedIn](https://www.linkedin.com/in/booscaaa/).
 - Create tokenized card
 - Get plans for signatures
 - Get plan by ID
+- Create plan
+- Disable plan by ID
+- Enable plan by ID
 
 <br>
 
