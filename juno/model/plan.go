@@ -64,7 +64,17 @@ func FromJsonJunoPlan(body io.ReadCloser) (*Plan, error) {
 
 func FromJsonJunoPlans(body io.ReadCloser) (*[]Plan, error) {
 	embedded := _Embedded{}
-	json.NewDecoder(body).Decode(&embedded)
+	err := json.NewDecoder(body).Decode(&embedded)
+
+	if err != nil {
+		return nil, err
+	}
+
+	for _, plan := range *&embedded.Embedded.Plans {
+		if isValid, err := plan.isValid(); !isValid {
+			return nil, err
+		}
+	}
 
 	return &embedded.Embedded.Plans, nil
 }
