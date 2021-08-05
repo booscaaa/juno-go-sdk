@@ -2,6 +2,7 @@ package model
 
 import (
 	"encoding/json"
+	"fmt"
 	"io"
 )
 
@@ -22,11 +23,39 @@ type Plan struct {
 	Amount    float64 `json:"amount"`
 }
 
+func (plan Plan) isValid() (bool, error) {
+	if plan.ID == "" {
+		return false, fmt.Errorf("ID not be empty")
+	}
+
+	if plan.CreatedOn == "" {
+		return false, fmt.Errorf("CreatedOn not be empty")
+	}
+
+	if plan.Name == "" {
+		return false, fmt.Errorf("Name not be empty")
+	}
+
+	if plan.Frequency == "" {
+		return false, fmt.Errorf("Frequency not be empty")
+	}
+
+	if plan.Status == "" {
+		return false, fmt.Errorf("Status not be empty")
+	}
+
+	if plan.Amount == 0.0 {
+		return false, fmt.Errorf("Amount not be empty")
+	}
+
+	return true, nil
+}
+
 func FromJsonJunoPlan(body io.ReadCloser) (*Plan, error) {
 	plan := Plan{}
-	err := json.NewDecoder(body).Decode(&plan)
+	json.NewDecoder(body).Decode(&plan)
 
-	if err != nil {
+	if isValid, err := plan.isValid(); !isValid {
 		return nil, err
 	}
 
@@ -35,11 +64,7 @@ func FromJsonJunoPlan(body io.ReadCloser) (*Plan, error) {
 
 func FromJsonJunoPlans(body io.ReadCloser) (*[]Plan, error) {
 	embedded := _Embedded{}
-	err := json.NewDecoder(body).Decode(&embedded)
-
-	if err != nil {
-		return nil, err
-	}
+	json.NewDecoder(body).Decode(&embedded)
 
 	return &embedded.Embedded.Plans, nil
 }

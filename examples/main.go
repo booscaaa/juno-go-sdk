@@ -16,10 +16,12 @@ func init() {
 }
 
 func main() {
+	// Get configuration variavables
 	clientID := viper.GetString("juno.client_id")
 	clientSecret := viper.GetString("juno.client_secret")
 	resourceToken := viper.GetString("juno.resource_token")
 
+	// Configure Sandbox access into Juno api
 	junoAccess := juno.JunoConfig().
 		ClientID(clientID).
 		ClientSecret(clientSecret).
@@ -28,23 +30,36 @@ func main() {
 
 	junoSdk := juno.Instance(junoAccess)
 
+	// Get authentication token from juno api
 	accessToken, err := junoSdk.GetAuthToken()
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	_, err = junoSdk.TokenizeCard(*accessToken, "a750d6be-8940-4854-97ab-5e54a4e00716")
+	// Tokenize credit card by hash. How to crypt hash can be found hear: https://dev.juno.com.br/api/v2#tag/Obtendo-o-hash
+	creditCard, err := junoSdk.TokenizeCard(*accessToken, "e6bfca8c-ef97-4707-bc2a-e95ac26898be")
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
+	fmt.Println(creditCard)
+
+	//Get list plans from juno api
 	plans, err := junoSdk.GetPlans(*accessToken)
 
 	if err != nil {
 		fmt.Println(err)
 	}
 
-	fmt.Println(plans)
+	for _, plan := range *plans {
+		//Get plan by id from juno api
+		newPlan, err := junoSdk.GetPlan(*accessToken, plan.ID)
+
+		if err != nil {
+			fmt.Println(err)
+		}
+		fmt.Println(newPlan)
+	}
 }

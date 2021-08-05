@@ -126,3 +126,33 @@ func (juno junoAccess) GetPlans(junoAccessAuth model.JunoAccessAuth) (*[]model.P
 		return nil, defaultError
 	}
 }
+
+func (juno junoAccess) GetPlan(junoAccessAuth model.JunoAccessAuth, planID string) (*model.Plan, error) {
+	urlString := juno.access.api + juno.access.baseUrl + "/plans/" + planID
+
+	r, _ := http.NewRequest(http.MethodGet, urlString, nil)
+	r.Header.Add("Authorization", "Bearer "+junoAccessAuth.AccessToken)
+	r.Header.Add("X-Api-Version", "2")
+	r.Header.Add("Content-Type", "application/json;charset=UTF-8")
+	r.Header.Add("X-Resource-Token", juno.access.resourceToken)
+
+	resp, err := Client.Do(r)
+
+	if err != nil {
+		return nil, err
+	}
+
+	if resp.StatusCode == 200 {
+		plan, err := model.FromJsonJunoPlan(resp.Body)
+
+		if err != nil {
+			return nil, err
+		}
+
+		return plan, nil
+	} else {
+		defaultError := errors.ParseDefaultError(resp.Body)
+
+		return nil, defaultError
+	}
+}
