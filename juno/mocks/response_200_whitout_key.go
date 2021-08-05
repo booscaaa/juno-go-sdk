@@ -1,0 +1,25 @@
+package mocks
+
+import (
+	"bytes"
+	"io/ioutil"
+	"net/http"
+)
+
+func Response200WithoutKey() *MockClient {
+	jsonResponse := `
+	  {
+		"key": "",
+	  }
+	`
+	// create a new reader with that JSON
+	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
+	return &MockClient{
+		MockDo: func(*http.Request) (*http.Response, error) {
+			return &http.Response{
+				StatusCode: 200,
+				Body:       r,
+			}, nil
+		},
+	}
+}

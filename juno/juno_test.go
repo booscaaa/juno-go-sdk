@@ -1,29 +1,14 @@
 package juno
 
 import (
-	"bytes"
-	"io/ioutil"
-	"net/http"
 	"testing"
 
+	"github.com/booscaaa/juno-go-sdk/juno/mocks"
 	"github.com/smartystreets/assertions/assert"
 	"github.com/smartystreets/assertions/should"
 )
 
-// Custom type that allows setting the func that our Mock Do func will run instead
-type MockDoType func(req *http.Request) (*http.Response, error)
-
-// MockClient is the mock client
-type MockClient struct {
-	MockDo MockDoType
-}
-
-// Overriding what the Do function should "do" in our MockClient
-func (m *MockClient) Do(req *http.Request) (*http.Response, error) {
-	return m.MockDo(req)
-}
-
-func TestSholdBeReturnJunoConfigSandbox(t *testing.T) {
+func TestSholdBeReturnJunoConfig(t *testing.T) {
 	junoAccess := JunoConfig().
 		ClientID("123").
 		ClientSecret("1234").
@@ -36,7 +21,7 @@ func TestSholdBeReturnJunoConfigSandbox(t *testing.T) {
 	assert.So(junoAccess.resourceToken, should.Equal, "12345abc").Fatal()
 }
 
-func TestSholdBeReturnJunoInstanceSandbox(t *testing.T) {
+func TestSholdBeReturnJunoInstance(t *testing.T) {
 	junoAccess := JunoConfig().
 		ClientID("123").
 		ClientSecret("1234").
@@ -49,7 +34,7 @@ func TestSholdBeReturnJunoInstanceSandbox(t *testing.T) {
 	assert.So(junoSdk, should.NotBeNil).Fatal()
 }
 
-func TestSholdBeReturnJunoAuthTokenSandbox(t *testing.T) {
+func TestSholdBeReturnJunoAuthToken(t *testing.T) {
 	junoAccess := JunoConfig().
 		ClientID("123").
 		ClientSecret("1234").
@@ -58,72 +43,169 @@ func TestSholdBeReturnJunoAuthTokenSandbox(t *testing.T) {
 
 	junoSdk := Instance(junoAccess)
 
-	jsonResponse := `{
-	  "full_name": "mock-repo"
-	 }`
-	// create a new reader with that JSON
-	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-	Client = &MockClient{
-		MockDo: func(*http.Request) (*http.Response, error) {
-			return &http.Response{
-				StatusCode: 200,
-				Body:       r,
-			}, nil
-		},
-	}
+	Client = mocks.Respose200Authorization()
 
-	_, err := junoSdk.GetAuthToken()
+	authToken, err := junoSdk.GetAuthToken()
 
 	if err != nil {
 		t.Errorf(err.Error())
 	}
 
-	// assert.So(authToken.AccessToken, should.NotBeEmpty).Fatal()
+	assert.So(authToken.AccessToken, should.NotBeEmpty).Fatal()
 }
 
-// func TestGitHubCallSuccess(t *testing.T) {
-// 	// build our response JSON
-// 	jsonResponse := `[{
-// 	  "full_name": "mock-repo"
-// 	 }]`
-// 	// create a new reader with that JSON
-// 	r := ioutil.NopCloser(bytes.NewReader([]byte(jsonResponse)))
-// 	Client = &MockClient{
-// 		MockDo: func(*http.Request) (*http.Response, error) {
-// 			return &http.Response{
-// 				StatusCode: 200,
-// 				Body:       r,
-// 			}, nil
-// 		},
-// 	}
-// 	result, err := GetRepos("atkinsonbg")
-// 	if err != nil {
-// 		t.Error("TestGitHubCallSuccess failed.")
-// 		return
-// 	}
-// 	if len(result) == 0 {
-// 		t.Error("TestGitHubCallSuccess failed, array was empty.")
-// 		return
-// 	}
-// 	if result[0]["full_name"] != "mock-repo" {
-// 		t.Error("TestGitHubCallSuccess failed, array was not sorted correctly.")
-// 		return
-// 	}
-// }
+func TestSholdBeReturnJunoDefaultErrorOnGetAuthToken(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
 
-// func TestGitHubCallFail(t *testing.T) {
-// 	// create a client that throws and returns an error
-// 	Client = &MockClient{
-// 		MockDo: func(*http.Request) (*http.Response, error) {
-// 			return &http.Response{
-// 				StatusCode: 404,
-// 				Body:       nil,
-// 			}, errors.New("Mock Error")
-// 		},
-// 	}
-// 	_, err := GetRepos("atkinsonbgthisusershouldnotexist")
-// 	if err == nil {
-// 		t.Error("TestGitHubCallFail failed.")
-// 		return
-// 	}
-// }
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.ResponseDefaultError()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(authToken, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnAnyKeyEmptyOnGetAuthToken(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Response200WithoutKey()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(authToken, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnRequestNotFormated(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.WrongRequestFormat()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(authToken, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnJunoCreditCard(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200CreditCard()
+
+	creditCard, err := junoSdk.TokenizeCard(*authToken, "")
+
+	if err != nil {
+		t.Errorf(err.Error())
+	}
+
+	assert.So(creditCard.CreditCardId, should.NotBeEmpty).Fatal()
+}
+
+func TestSholdBeReturnJunoDefaultErrorOnGetCreditCard(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.ResponseDefaultError()
+
+	creditCard, err := junoSdk.TokenizeCard(*authToken, "")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(creditCard, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnAnyKeyEmptyOnGetCreditCard(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.Response200WithoutKey()
+
+	creditCard, err := junoSdk.TokenizeCard(*authToken, "")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(creditCard, should.BeNil).Fatal()
+}
+
+func TestSholdBeReturnErrorOnRequestNotFormatedOnGetCreditCard(t *testing.T) {
+	junoAccess := JunoConfig().
+		ClientID("123").
+		ClientSecret("1234").
+		ResourceToken("12345abc").
+		Sandbox()
+
+	junoSdk := Instance(junoAccess)
+
+	Client = mocks.Respose200Authorization()
+
+	authToken, err := junoSdk.GetAuthToken()
+
+	Client = mocks.WrongRequestFormat()
+
+	creditCard, err := junoSdk.TokenizeCard(*authToken, "")
+
+	if err == nil {
+		t.Errorf("Shold be return error, not ok")
+	}
+
+	assert.So(creditCard, should.BeNil).Fatal()
+}

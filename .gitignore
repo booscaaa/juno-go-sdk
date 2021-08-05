@@ -1,3 +1,5 @@
 examples/config.json
 
 go.sum
+
+cover.out
